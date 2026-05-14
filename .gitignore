@@ -1,0 +1,26 @@
+﻿# Python
+sketchly-backend/venv/
+sketchly-backend/__pycache__/
+sketchly-backend/*.pyc
+sketchly-backend/.env
+sketchly-backend/.pytest_cache/
+
+# Node
+sketchly-frontend/node_modules/
+sketchly-frontend/dist/
+sketchly-frontend/.env
+sketchly-frontend/.env.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS
+Thumbs.db
