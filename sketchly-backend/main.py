@@ -1,52 +1,66 @@
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from typing import Dict, List
+from app.config import settings
+from app.routers import websocket
+from app.utils import logger  # This initializes logging
+import logging
 
-app = FastAPI()
+logger = logging.getLogger(__name__)
 
-# Allow frontend to connect
+# Initialize FastAPI app
+app = FastAPI(
+    title="Sketchly API",
+    description="Real-time collaborative whiteboard backend",
+    version="1.0.0",
+    docs_url="/docs" if settings.ENV == "development" else None,
+)
+
+# CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=settings.cors_origins_list,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Store active connections per room
-# Format: { "room_id": [websocket1, websocket2, ...] }
-rooms: Dict[str, List[WebSocket]] = {}
+# Include routers
+app.include_router(websocket.router)
 
 @app.get("/")
 def read_root():
-    return {"message": "Sketchly Backend Running 🚀"}
+    """Health check endpoint"""
+    return {
+        "message": "Sketchly Backend Running 🚀",
+        "version": "1.0.0",
+        "environment": settings.ENV
+    }
 
-@app.websocket("/ws/{room_id}")
-async def websocket_endpoint(websocket: WebSocket, room_id: str):
-    await websocket.accept()
+@app.get("/health")
+def health_check():
+    """Detailed health check with room stats"""
+    from app.services.room_manager import room_manager
     
-    # Add user to room
-    if room_id not in rooms:
-        rooms[room_id] = []
-    rooms[room_id].append(websocket)
-    
-    print(f"✅ User joined room: {room_id} (total: {len(rooms[room_id])})")
-    
-    try:
-        while True:
-            # Receive message from user
-            data = await websocket.receive_json()
-            
-            # Broadcast to everyone in the room EXCEPT sender
-            for connection in rooms[room_id]:
-                if connection != websocket:
-                    await connection.send_json(data)
-                    
-    except WebSocketDisconnect:
-        # Remove user from room
-        rooms[room_id].remove(websocket)
-        print(f"❌ User left room: {room_id} (remaining: {len(rooms[room_id])})")
-        
-        # Clean up empty rooms
-        if len(rooms[room_id]) == 0:
-            del rooms[room_id]
+    return {
+        "status": "healthy",
+        "environment": settings.ENV,
+        "active_rooms": room_manager.get_total_rooms()
+    }
+
+@app.on_event("startup")
+async def startup_event():
+    """Log startup information"""
+    logger.info(f"🚀 Sketchly Backend Starting...")
+    logger.info(f"📍 Environment: {settings.ENV}")
+    logger.info(f"🌐 CORS Origins: {settings.cors_origins_list}")
+    logger.info(f"🔌 WebSocket endpoint: /ws/{{room_id}}")
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(
+        "main:app",
+        host=settings.HOST,
+        port=settings.PORT,
+        reload=settings.ENV == "development",
+        log_level=settings.LOG_LEVEL.lower()
+    )
