@@ -58,139 +58,196 @@ function Room() {
 
   return (
     <div style={{
-      minHeight: '100vh',
-      background: '#f3f4f6',
-      padding: '20px'
+      position: 'relative',
+      width: '100vw',
+      height: '100vh',
+      overflow: 'hidden',
+      background: '#0A0A0C'
     }}>
+      {/* Dot grid overlay */}
+      <div className="dot-grid" />
+      
       <ConnectionStatus status={connectionStatus} />
 
-      {/* Header */}
+      {/* Top-left floating menu - Room info */}
       <div style={{
-        maxWidth: '900px',
-        margin: '0 auto 30px auto',
+        position: 'fixed',
+        top: '24px',
+        left: '24px',
+        zIndex: 100,
+        background: 'rgba(20, 20, 22, 0.4)',
+        backdropFilter: 'blur(12px)',
+        WebkitBackdropFilter: 'blur(12px)',
+        border: '1px solid rgba(255, 255, 255, 0.08)',
+        borderRadius: '12px',
+        padding: '16px 24px',
+        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
         display: 'flex',
-        justifyContent: 'space-between',
         alignItems: 'center',
-        flexWrap: 'wrap',
-        gap: '15px'
+        gap: '16px'
       }}>
         <div>
-          <h1 style={{
-            fontSize: '32px',
-            margin: '0 0 5px 0',
-            color: '#1f2937',
-            fontWeight: '800'
-          }}>
-            ✨ Sketchly
-          </h1>
           <p style={{
             margin: 0,
-            fontSize: '14px',
-            color: '#6b7280'
+            fontSize: '10px',
+            letterSpacing: '2px',
+            textTransform: 'uppercase',
+            color: 'rgba(255, 255, 255, 0.4)',
+            fontWeight: '500'
           }}>
-            Room: <span style={{
-              fontFamily: 'monospace',
-              background: '#e5e7eb',
-              padding: '4px 8px',
-              borderRadius: '4px',
-              fontWeight: '600'
-            }}>{roomId}</span>
+            Room
           </p>
-        </div>
-
-        <div style={{ display: 'flex', gap: '10px' }}>
-          <button
-            onClick={handleCopyLink}
-            style={{
-              padding: '10px 20px',
-              fontSize: '14px',
-              fontWeight: '600',
-              color: '#fff',
-              background: copied ? '#22c55e' : '#667eea',
-              border: 'none',
-              borderRadius: '8px',
-              cursor: 'pointer',
-              transition: 'all 0.2s',
-              boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
-            }}
-            onMouseEnter={(e) => {
-              if (!copied) e.target.style.background = '#5568d3';
-            }}
-            onMouseLeave={(e) => {
-              if (!copied) e.target.style.background = '#667eea';
-            }}
-          >
-            {copied ? '✓ Copied!' : '📋 Copy Link'}
-          </button>
-
-          <button
-            onClick={() => navigate('/')}
-            style={{
-              padding: '10px 20px',
-              fontSize: '14px',
-              fontWeight: '600',
-              color: '#374151',
-              background: '#fff',
-              border: '2px solid #d1d5db',
-              borderRadius: '8px',
-              cursor: 'pointer',
-              transition: 'all 0.2s'
-            }}
-            onMouseEnter={(e) => {
-              e.target.style.background = '#f9fafb';
-              e.target.style.borderColor = '#9ca3af';
-            }}
-            onMouseLeave={(e) => {
-              e.target.style.background = '#fff';
-              e.target.style.borderColor = '#d1d5db';
-            }}
-          >
-            🏠 Home
-          </button>
+          <p style={{
+            margin: '4px 0 0 0',
+            fontSize: '14px',
+            fontFamily: 'monospace',
+            color: '#ffffff',
+            fontWeight: '600',
+            letterSpacing: '1px'
+          }}>
+            {roomId}
+          </p>
         </div>
       </div>
 
-      {/* Canvas */}
+      {/* Top-right floating menu - Actions */}
       <div style={{
-        maxWidth: '900px',
-        margin: '0 auto'
+        position: 'fixed',
+        top: '24px',
+        right: '24px',
+        zIndex: 100,
+        display: 'flex',
+        gap: '12px'
+      }}>
+        <button
+          onClick={handleCopyLink}
+          style={{
+            padding: '12px 20px',
+            fontSize: '11px',
+            fontWeight: '600',
+            letterSpacing: '1px',
+            textTransform: 'uppercase',
+            color: copied ? '#0A0A0C' : 'rgba(255, 255, 255, 0.7)',
+            background: copied ? '#00E5FF' : 'rgba(20, 20, 22, 0.4)',
+            backdropFilter: 'blur(12px)',
+            WebkitBackdropFilter: 'blur(12px)',
+            border: '1px solid rgba(255, 255, 255, 0.08)',
+            borderRadius: '8px',
+            cursor: 'pointer',
+            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
+            transition: 'all 0.2s ease'
+          }}
+          onMouseEnter={(e) => {
+            if (!copied) {
+              e.target.style.background = 'rgba(255, 255, 255, 0.1)';
+              e.target.style.color = '#ffffff';
+            }
+          }}
+          onMouseLeave={(e) => {
+            if (!copied) {
+              e.target.style.background = 'rgba(20, 20, 22, 0.4)';
+              e.target.style.color = 'rgba(255, 255, 255, 0.7)';
+            }
+          }}
+        >
+          {copied ? 'Copied' : 'Copy Link'}
+        </button>
+
+        <button
+          onClick={() => navigate('/')}
+          style={{
+            padding: '12px 20px',
+            fontSize: '11px',
+            fontWeight: '600',
+            letterSpacing: '1px',
+            textTransform: 'uppercase',
+            color: 'rgba(255, 255, 255, 0.7)',
+            background: 'rgba(20, 20, 22, 0.4)',
+            backdropFilter: 'blur(12px)',
+            WebkitBackdropFilter: 'blur(12px)',
+            border: '1px solid rgba(255, 255, 255, 0.08)',
+            borderRadius: '8px',
+            cursor: 'pointer',
+            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
+            transition: 'all 0.2s ease'
+          }}
+          onMouseEnter={(e) => {
+            e.target.style.background = 'rgba(255, 255, 255, 0.1)';
+            e.target.style.color = '#ffffff';
+          }}
+          onMouseLeave={(e) => {
+            e.target.style.background = 'rgba(20, 20, 22, 0.4)';
+            e.target.style.color = 'rgba(255, 255, 255, 0.7)';
+          }}
+        >
+          Exit
+        </button>
+      </div>
+
+      {/* Edge-to-edge Canvas */}
+      <div style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        zIndex: 1
       }}>
         <CanvasBoard
           onDraw={handleDraw}
           onClear={handleClear}
           onRemoteDraw={(callback) => wsService.onDraw(callback)}
           onRemoteClear={(callback) => wsService.onClear(callback)}
+          onRemoteHistory={(callback) => wsService.onHistory(callback)}
         />
       </div>
 
-      {/* Instructions */}
+      {/* Bottom-center floating toolbar */}
       <div style={{
-        maxWidth: '900px',
-        margin: '30px auto 0 auto',
-        padding: '20px',
-        background: '#fff',
-        borderRadius: '12px',
-        boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+        position: 'fixed',
+        bottom: '32px',
+        left: '50%',
+        transform: 'translateX(-50%)',
+        zIndex: 100,
+        background: 'rgba(20, 20, 22, 0.4)',
+        backdropFilter: 'blur(12px)',
+        WebkitBackdropFilter: 'blur(12px)',
+        border: '1px solid rgba(255, 255, 255, 0.08)',
+        borderRadius: '50px',
+        padding: '12px 24px',
+        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '8px'
       }}>
-        <h3 style={{
-          margin: '0 0 15px 0',
-          fontSize: '18px',
-          color: '#1f2937',
-          fontWeight: '600'
-        }}>
-          💡 How to collaborate:
-        </h3>
-        <ol style={{
-          margin: 0,
-          paddingLeft: '20px',
-          color: '#6b7280',
-          lineHeight: '1.8'
-        }}>
-          <li>Click "Copy Link" and share with others</li>
-          <li>Everyone who opens the link joins this room</li>
-          <li>Draw together in real-time!</li>
-          <li>Note: New users will see a blank canvas (no history sync yet)</li>
-        </ol>
+        <button
+          onClick={handleClear}
+          style={{
+            padding: '10px 24px',
+            fontSize: '11px',
+            fontWeight: '600',
+            letterSpacing: '1px',
+            textTransform: 'uppercase',
+            color: 'rgba(255, 255, 255, 0.7)',
+            background: 'transparent',
+            border: '1px solid rgba(255, 255, 255, 0.12)',
+            borderRadius: '20px',
+            cursor: 'pointer',
+            transition: 'all 0.2s ease'
+          }}
+          onMouseEnter={(e) => {
+            e.target.style.background = 'rgba(255, 255, 255, 0.1)';
+            e.target.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+            e.target.style.color = '#ffffff';
+          }}
+          onMouseLeave={(e) => {
+            e.target.style.background = 'transparent';
+            e.target.style.borderColor = 'rgba(255, 255, 255, 0.12)';
+            e.target.style.color = 'rgba(255, 255, 255, 0.7)';
+          }}
+        >
+          Clear
+        </button>
       </div>
     </div>
   );

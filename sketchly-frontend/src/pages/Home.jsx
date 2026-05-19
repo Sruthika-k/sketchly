@@ -16,88 +16,109 @@ function Home() {
       flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'center',
-      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-      padding: '20px'
+      background: '#0A0A0C',
+      position: 'relative',
+      overflow: 'hidden'
     }}>
+      {/* Dot grid overlay */}
+      <div className="dot-grid" />
+      
+      {/* Main content */}
       <div style={{
+        position: 'relative',
+        zIndex: 1,
         textAlign: 'center',
-        background: '#fff',
-        padding: '60px 40px',
-        borderRadius: '16px',
-        boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
-        maxWidth: '500px',
-        width: '100%'
+        background: 'rgba(20, 20, 22, 0.4)',
+        backdropFilter: 'blur(12px)',
+        WebkitBackdropFilter: 'blur(12px)',
+        border: '1px solid rgba(255, 255, 255, 0.08)',
+        padding: '80px 60px',
+        borderRadius: '24px',
+        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4)',
+        maxWidth: '520px',
+        width: '100%',
+        margin: '20px'
       }}>
         <h1 style={{
-          fontSize: '48px',
-          margin: '0 0 10px 0',
-          color: '#1f2937',
-          fontWeight: '800'
+          fontSize: '64px',
+          margin: '0 0 8px 0',
+          color: '#ffffff',
+          fontWeight: '300',
+          letterSpacing: '-2px',
+          textTransform: 'lowercase'
         }}>
-          ✨ Sketchly
+          sketchly
         </h1>
         <p style={{
-          fontSize: '18px',
-          color: '#6b7280',
-          marginBottom: '40px',
-          lineHeight: '1.6'
+          fontSize: '14px',
+          color: 'rgba(255, 255, 255, 0.5)',
+          marginBottom: '48px',
+          letterSpacing: '2px',
+          textTransform: 'uppercase',
+          fontWeight: '500'
         }}>
-          Real-time collaborative whiteboard
-          <br />
-          <span style={{ fontSize: '14px' }}>Draw together, create together</span>
+          Collaborative Whiteboard
         </p>
         
         <button
           onClick={createRoom}
           style={{
-            padding: '16px 48px',
-            fontSize: '18px',
+            padding: '18px 56px',
+            fontSize: '13px',
             fontWeight: '600',
-            color: '#fff',
-            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            letterSpacing: '1.5px',
+            textTransform: 'uppercase',
+            color: '#0A0A0C',
+            background: '#00E5FF',
             border: 'none',
-            borderRadius: '12px',
+            borderRadius: '8px',
             cursor: 'pointer',
-            boxShadow: '0 4px 15px rgba(102, 126, 234, 0.4)',
-            transition: 'all 0.3s',
+            boxShadow: '0 0 20px rgba(0, 229, 255, 0.15)',
+            transition: 'all 0.3s ease',
             width: '100%'
           }}
           onMouseEnter={(e) => {
-            e.target.style.transform = 'translateY(-2px)';
-            e.target.style.boxShadow = '0 6px 20px rgba(102, 126, 234, 0.6)';
+            e.target.style.transform = 'translateY(-1px)';
+            e.target.style.boxShadow = '0 0 30px rgba(0, 229, 255, 0.25)';
           }}
           onMouseLeave={(e) => {
             e.target.style.transform = 'translateY(0)';
-            e.target.style.boxShadow = '0 4px 15px rgba(102, 126, 234, 0.4)';
+            e.target.style.boxShadow = '0 0 20px rgba(0, 229, 255, 0.15)';
           }}
         >
-          Create New Room
+          Create Room
         </button>
 
         <div style={{
-          marginTop: '30px',
-          padding: '20px',
-          background: '#f9fafb',
-          borderRadius: '8px',
-          fontSize: '14px',
-          color: '#6b7280'
+          marginTop: '32px',
+          padding: '24px',
+          background: 'rgba(255, 255, 255, 0.02)',
+          borderRadius: '12px',
+          fontSize: '12px',
+          color: 'rgba(255, 255, 255, 0.4)',
+          letterSpacing: '0.5px',
+          lineHeight: '1.8',
+          border: '1px solid rgba(255, 255, 255, 0.04)'
         }}>
-          <p style={{ margin: 0 }}>
-            💡 <strong>How it works:</strong>
+          <p style={{ margin: 0, fontWeight: '500', letterSpacing: '1px', textTransform: 'uppercase', marginBottom: '8px' }}>
+            How it works
           </p>
-          <p style={{ margin: '10px 0 0 0', lineHeight: '1.6' }}>
-            Create a room and share the link with others. Everyone in the room can draw together in real-time.
+          <p style={{ margin: 0 }}>
+            Create a room and share the link. Everyone in the room can draw together in real-time.
           </p>
         </div>
       </div>
 
       <footer style={{
-        marginTop: '40px',
-        color: '#fff',
-        fontSize: '14px',
-        opacity: 0.8
+        position: 'relative',
+        zIndex: 1,
+        marginTop: '48px',
+        color: 'rgba(255, 255, 255, 0.3)',
+        fontSize: '11px',
+        letterSpacing: '1px',
+        textTransform: 'uppercase'
       }}>
-        Built with FastAPI + React + WebSockets
+        Built with FastAPI · React · WebSockets
       </footer>
     </div>
   );

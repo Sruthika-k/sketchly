@@ -19,13 +19,29 @@ function ConnectionStatus({ status }) {
   const getStatusConfig = () => {
     switch (status) {
       case CONNECTION_STATUS.CONNECTED:
-        return { color: '#22c55e', text: 'Connected', dot: '🟢' };
+        return { 
+          color: '#00E5FF', 
+          glow: 'rgba(0, 229, 255, 0.3)',
+          text: 'Connected' 
+        };
       case CONNECTION_STATUS.CONNECTING:
-        return { color: '#eab308', text: 'Connecting...', dot: '🟡' };
+        return { 
+          color: '#FFB800', 
+          glow: 'rgba(255, 184, 0, 0.3)',
+          text: 'Connecting...' 
+        };
       case CONNECTION_STATUS.DISCONNECTED:
-        return { color: '#ef4444', text: 'Disconnected', dot: '🔴' };
+        return { 
+          color: '#FF4757', 
+          glow: 'rgba(255, 71, 87, 0.3)',
+          text: 'Disconnected' 
+        };
       default:
-        return { color: '#6b7280', text: 'Unknown', dot: '⚪' };
+        return { 
+          color: '#6B7280', 
+          glow: 'rgba(107, 114, 128, 0.3)',
+          text: 'Unknown' 
+        };
     }
   };
 
@@ -35,24 +51,36 @@ function ConnectionStatus({ status }) {
     <div
       style={{
         position: 'fixed',
-        top: '20px',
-        right: '20px',
+        top: '24px',
+        left: '50%',
+        transform: 'translateX(-50%)',
         display: 'flex',
         alignItems: 'center',
-        gap: '8px',
-        padding: '10px 16px',
-        background: '#fff',
-        border: `2px solid ${config.color}`,
-        borderRadius: '8px',
-        fontSize: '14px',
-        fontWeight: '500',
+        gap: '12px',
+        padding: '12px 24px',
+        background: 'rgba(20, 20, 22, 0.4)',
+        backdropFilter: 'blur(12px)',
+        WebkitBackdropFilter: 'blur(12px)',
+        border: '1px solid rgba(255, 255, 255, 0.08)',
+        borderRadius: '50px',
+        fontSize: '11px',
+        fontWeight: '600',
+        letterSpacing: '1px',
+        textTransform: 'uppercase',
         color: config.color,
-        boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+        boxShadow: `0 8px 32px rgba(0, 0, 0, 0.3), 0 0 20px ${config.glow}`,
         zIndex: 1000,
         animation: 'fadeIn 0.3s ease-in'
       }}
     >
-      <span>{config.dot}</span>
+      <div style={{
+        width: '8px',
+        height: '8px',
+        borderRadius: '50%',
+        background: config.color,
+        boxShadow: `0 0 12px ${config.glow}`,
+        animation: status === CONNECTION_STATUS.CONNECTING ? 'pulse 1.5s ease-in-out infinite' : 'none'
+      }} />
       <span>{config.text}</span>
     </div>
   );

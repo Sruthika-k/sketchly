@@ -17,6 +17,7 @@ class WebSocketService {
     this.onClearCallback = null;
     this.onConnectCallback = null;
     this.onDisconnectCallback = null;
+    this.onHistoryCallback = null;
   }
 
   /**
@@ -74,6 +75,9 @@ class WebSocketService {
         break;
       case WS_EVENTS.CLEAR:
         this.onClearCallback?.();
+        break;
+      case 'history':
+        this.onHistoryCallback?.(data.strokes);
         break;
       default:
         console.warn('⚠️ Unknown message type:', type);
@@ -161,6 +165,14 @@ class WebSocketService {
    */
   onDisconnect(callback) {
     this.onDisconnectCallback = callback;
+  }
+
+  /**
+   * Register callback for history events
+   * @param {Function} callback - Function to call when history received
+   */
+  onHistory(callback) {
+    this.onHistoryCallback = callback;
   }
 
   /**

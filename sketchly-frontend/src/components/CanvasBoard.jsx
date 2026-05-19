@@ -1,20 +1,29 @@
 import { useRef, useEffect, useState } from 'react';
 import { CANVAS_CONFIG } from '../utils/constants';
 
-function CanvasBoard({ onDraw, onClear, onRemoteDraw, onRemoteClear }) {
+function CanvasBoard({ onDraw, onClear, onRemoteDraw, onRemoteClear, onRemoteHistory }) {
   const canvasRef = useRef(null);
   const [isDrawing, setIsDrawing] = useState(false);
   const [lastPos, setLastPos] = useState({ x: 0, y: 0 });
 
-  // Initialize canvas
+  // Initialize canvas with full viewport size
   useEffect(() => {
     const canvas = canvasRef.current;
-    canvas.width = CANVAS_CONFIG.width;
-    canvas.height = CANVAS_CONFIG.height;
-    
-    const ctx = canvas.getContext('2d');
-    ctx.fillStyle = CANVAS_CONFIG.backgroundColor;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    const resizeCanvas = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle = CANVAS_CONFIG.backgroundColor;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+    };
+
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    return () => {
+      window.removeEventListener('resize', resizeCanvas);
+    };
   }, []);
 
   // Handle remote draw events
@@ -36,6 +45,16 @@ function CanvasBoard({ onDraw, onClear, onRemoteDraw, onRemoteClear }) {
       onRemoteClear(handleRemoteClear);
     }
   }, [onRemoteClear]);
+
+  // Handle remote history events
+  useEffect(() => {
+    if (onRemoteHistory) {
+      const handleHistory = (strokes) => {
+        strokes.forEach(s => drawLine(s.prevX, s.prevY, s.x, s.y));
+      };
+      onRemoteHistory(handleHistory);
+    }
+  }, [onRemoteHistory]);
 
   const drawLine = (x1, y1, x2, y2) => {
     const canvas = canvasRef.current;
@@ -92,41 +111,17 @@ function CanvasBoard({ onDraw, onClear, onRemoteDraw, onRemoteClear }) {
   };
 
   return (
-    <div style={{ textAlign: 'center' }}>
-      <canvas
-        ref={canvasRef}
-        onMouseDown={startDrawing}
-        onMouseMove={draw}
-        onMouseUp={stopDrawing}
-        onMouseLeave={stopDrawing}
-        style={{
-          border: '2px solid #333',
-          borderRadius: '8px',
-          cursor: 'crosshair',
-          boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
-        }}
-      />
-      <br />
-      <button
-        onClick={handleClearClick}
-        style={{
-          marginTop: '15px',
-          padding: '12px 24px',
-          background: '#000',
-          color: '#fff',
-          border: 'none',
-          borderRadius: '6px',
-          cursor: 'pointer',
-          fontSize: '14px',
-          fontWeight: '600',
-          transition: 'all 0.2s'
-        }}
-        onMouseEnter={(e) => e.target.style.background = '#333'}
-        onMouseLeave={(e) => e.target.style.background = '#000'}
-      >
-        Clear Board
-      </button>
-    </div>
+    <canvas
+      ref={canvasRef}
+      onMouseDown={startDrawing}
+      onMouseMove={draw}
+      onMouseUp={stopDrawing}
+      onMouseLeave={stopDrawing}
+      style={{
+        display: 'block',
+        cursor: 'crosshair'
+      }}
+    />
   );
 }
 
