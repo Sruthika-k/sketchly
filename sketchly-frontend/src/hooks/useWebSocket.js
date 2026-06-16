@@ -1,4 +1,5 @@
 import { useEffect, useRef, useCallback } from 'react';
+import { WS_URL } from '../utils/constants';
 
 export const useWebSocket = (roomId, { onDraw, onClear }) => {
     const ws = useRef(null);
@@ -8,7 +9,8 @@ export const useWebSocket = (roomId, { onDraw, onClear }) => {
         let isMounted = true;
 
         const connect = () => {
-            ws.current = new WebSocket(`ws://localhost:8000/ws/${roomId}`);
+            const wsUrl = `${WS_URL}/ws/${roomId}`;
+            ws.current = new WebSocket(wsUrl);
 
             ws.current.onopen = () => {
                 console.log('Connected to WebSocket');

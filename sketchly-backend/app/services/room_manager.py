@@ -48,7 +48,7 @@ class RoomManager:
             if len(self.rooms[room_id]) == 0:
                 del self.rooms[room_id]
                 if room_id in self.canvas_state:
-    del self.canvas_state[room_id]
+                    del self.canvas_state[room_id]
                 logger.info(f"🗑️  Room {room_id} deleted (empty)")
     
     async def broadcast(self, room_id: str, message: dict, sender: WebSocket) -> None:
@@ -89,18 +89,18 @@ class RoomManager:
         return len(self.rooms)
     
     def add_stroke(self, room_id: str, stroke: dict):
-    """Store stroke in room history"""
-    if room_id not in self.canvas_state:
+        """Store stroke in room history"""
+        if room_id not in self.canvas_state:
+            self.canvas_state[room_id] = []
+        self.canvas_state[room_id].append(stroke)
+    
+    def get_canvas_state(self, room_id: str) -> List[dict]:
+        """Get all strokes for a room"""
+        return self.canvas_state.get(room_id, [])
+    
+    def clear_canvas_state(self, room_id: str):
+        """Clear room history"""
         self.canvas_state[room_id] = []
-    self.canvas_state[room_id].append(stroke)
-
-def get_canvas_state(self, room_id: str) -> List[dict]:
-    """Get all strokes for a room"""
-    return self.canvas_state.get(room_id, [])
-
-def clear_canvas_state(self, room_id: str):
-    """Clear room history"""
-    self.canvas_state[room_id] = []
 
 # Singleton instance
 room_manager = RoomManager()
