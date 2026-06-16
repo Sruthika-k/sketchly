@@ -1,10 +1,30 @@
 import { useRef, useEffect, useState } from 'react';
 import { CANVAS_CONFIG } from '../utils/constants';
 
-function CanvasBoard({ onDraw, onClear, onRemoteDraw, onRemoteClear, onRemoteHistory }) {
+function CanvasBoard({ onDraw, onRemoteDraw, onRemoteClear, onRemoteHistory }) {
   const canvasRef = useRef(null);
   const [isDrawing, setIsDrawing] = useState(false);
   const [lastPos, setLastPos] = useState({ x: 0, y: 0 });
+
+  const drawLine = (x1, y1, x2, y2) => {
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+    
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x2, y2);
+    ctx.strokeStyle = CANVAS_CONFIG.strokeColor;
+    ctx.lineWidth = CANVAS_CONFIG.strokeWidth;
+    ctx.lineCap = 'round';
+    ctx.stroke();
+  };
+
+  const clearCanvas = () => {
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = CANVAS_CONFIG.backgroundColor;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  };
 
   // Initialize canvas with full viewport size
   useEffect(() => {
@@ -56,19 +76,6 @@ function CanvasBoard({ onDraw, onClear, onRemoteDraw, onRemoteClear, onRemoteHis
     }
   }, [onRemoteHistory]);
 
-  const drawLine = (x1, y1, x2, y2) => {
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
-    
-    ctx.beginPath();
-    ctx.moveTo(x1, y1);
-    ctx.lineTo(x2, y2);
-    ctx.strokeStyle = CANVAS_CONFIG.strokeColor;
-    ctx.lineWidth = CANVAS_CONFIG.strokeWidth;
-    ctx.lineCap = 'round';
-    ctx.stroke();
-  };
-
   const startDrawing = (e) => {
     setIsDrawing(true);
     const pos = { x: e.nativeEvent.offsetX, y: e.nativeEvent.offsetY };
@@ -94,20 +101,6 @@ function CanvasBoard({ onDraw, onClear, onRemoteDraw, onRemoteClear, onRemoteHis
 
   const stopDrawing = () => {
     setIsDrawing(false);
-  };
-
-  const clearCanvas = () => {
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
-    ctx.fillStyle = CANVAS_CONFIG.backgroundColor;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-  };
-
-  const handleClearClick = () => {
-    clearCanvas();
-    if (onClear) {
-      onClear();
-    }
   };
 
   return (

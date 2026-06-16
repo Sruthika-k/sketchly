@@ -10,6 +10,8 @@ function ConnectionStatus({ status }) {
       const timer = setTimeout(() => setVisible(false), 3000);
       return () => clearTimeout(timer);
     } else {
+      // Show when not connected - this is needed to override any previous hide
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setVisible(true);
     }
   }, [status]);
